@@ -117,8 +117,6 @@ player_performance_data = master_data %>%
 
         )
  
- 
-
   
 ```
 
