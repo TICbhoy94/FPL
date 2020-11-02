@@ -1,0 +1,226 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+master_data = readxl::read_xlsx("../../data/FPL_Master_2020-21.xlsx")
+```
+
+```{r}
+master_data %>%
+  group_by(team) %>%
+  summarise(total_points = sum(total_points),
+            total_goals = sum(goals_scored),
+            total_assists = sum(assists),
+            total_saves = sum(saves),
+            total_penalties_saved = sum(penalties_saved),
+            total_clean_sheets = sum(clean_sheets),
+            total_yellow_cards = sum(yellow_cards),
+            total_red_cards = sum(red_cards),
+            total_penalties_missed = sum(penalties_missed),
+            total_own_goals = sum(own_goals)
+            )
+```
+
+
+```{r}
+
+player_performance_data = master_data %>%
+  filter(minutes > 0) %>%
+  group_by(second_name, element_type, team, `Game Week`, event_points, top_300_count, `tow?`, points_per_game, now_cost, minutes, bps, bonus, corners_and_indirect_freekicks_order, penalties_order,direct_freekicks_order) %>%
+  summarise(total_points = sum(total_points),
+            total_goals = sum(goals_scored),
+            total_assists = sum(assists),
+            total_saves = sum(saves),
+            total_penalties_saved = sum(penalties_saved),
+            total_clean_sheets = sum(clean_sheets),
+            total_yellow_cards = sum(yellow_cards),
+            total_red_cards = sum(red_cards),
+            total_goals_conceded = sum(goals_conceded),
+            total_penalties_missed = sum(penalties_missed),
+            total_own_goals = sum(own_goals)
+            ) %>%
+  
+  
+  
+  # calculate attacking points
+  mutate(attacking_points_total = 
+    
+    # calculate the points for goals scored
+    ifelse(element_type == "Defender", total_goals*6, 
+           ifelse(element_type == "Midfielder", total_goals*5, total_goals*4) +
+      
+    # calculate points for assists
+    total_assists*3
+  )) %>%
+  
+  # calculate defending points
+  mutate(defending_points_total = 
+           
+    #clean sheets
+    ifelse(element_type == "Defender" | element_type == "Goalkeeper", total_clean_sheets*4,
+           ifelse(element_type == "Midfielder", total_clean_sheets*1, total_clean_sheets*0)) +
+           
+    # saves
+    case_when(total_saves/3 < 1 ~ 0,
+              total_saves%%3 == 0 ~ (total_saves/3)*1,
+              (total_saves-1)  %%3 == 0 ~ ((total_saves-1)/3)*1,
+              TRUE ~ ((total_saves-2)/3)*1) +
+              
+    
+    # penalties saved
+    total_penalties_saved*5) %>%
+  
+  # calculate negative points
+  
+  mutate(negative_points_total =
+           
+    # goals conceded
+      case_when((element_type != "Defender" & element_type != "Goalkeeper") | total_goals_conceded/2 < 1 ~ 0,
+              total_goals_conceded%%2 == 0 ~ (total_goals_conceded/2)*-1,
+              TRUE ~ ((total_goals_conceded-1)/2)*-1) +
+      
+      
+    
+    # yellow cards
+      total_yellow_cards*-1 +
+      
+      
+    # red cards
+      total_red_cards*-3 +
+      
+    # own goals
+      total_own_goals*-2 +
+      
+
+    # penalties misses
+      total_penalties_missed*-2)
+
+
+  
+  # add one a calculation for the 3 sets of points for that week
+ player_performance_data = player_performance_data %>%
+   ungroup() %>%
+   group_by(second_name, element_type, team) %>%
+   arrange(second_name, `Game Week`) %>%
+   mutate(
+     
+        week_attack_points = attacking_points_total - lag(attacking_points_total, default = first(attacking_points_total)),
+        week_defend_points = defending_points_total - lag(defending_points_total, default = first(defending_points_total)),
+         week_negative_points = negative_points_total - lag(negative_points_total, default = first(negative_points_total))
+
+        )
+ 
+  
+```
+
+
+```{r}
+player_performance_data = player_performance_data %>%
+  
+  # calculate the percentage the player is responsible for the 3 sets of points for their team
+  group_by(team, `Game Week`) %>%
+  
+  mutate(team_attack_points = sum(attacking_points_total),
+         team_defend_points = sum(defending_points_total),
+         team_negative_points = sum(negative_points_total)) %>%
+  group_by(second_name, element_type, add = TRUE) %>%
+  
+  mutate(attack_percent = attacking_points_total/team_attack_points*100,
+         defend_percent = defending_points_total/team_defend_points*100,
+         negative_percent = negative_points_total/team_negative_points*100)
+  
+ 
+```
+
+
+```{r}
+top_300_stats = player_performance_data %>%
+  filter(!is.na(as.numeric(top_300_count))) %>%
+   mutate(top_300_pick_percent = as.integer(top_300_count)/4500*100)
+```
+
+
+```{r}
+top_300_stats %>%
+  filter(element_type == "Striker") %>%
+  arrange(desc(total_points))
+```
+
+
+For week 6, how did the TOW compare to the top 300's average team?
+
+```{r}
+# calculate the average top 300 team
+
+top_300_avg_team_6 = data.frame()
+
+strikers = top_300_stats %>%
+  filter(element_type == "Striker") %>%
+  arrange(desc(as.numeric(top_300_count))) %>%
+  head(3)
+
+miderfielders = top_300_stats %>%
+  filter(element_type == "Midfielder") %>%
+  arrange(desc(as.numeric(top_300_count))) %>%
+  head(5) 
+
+
+defenders = top_300_stats %>%
+  filter(element_type == "Defender") %>%
+  arrange(desc(as.numeric(top_300_count))) %>%
+  head(5)
+
+goalkeepers = top_300_stats %>%
+  filter(element_type == "Goalkeeper") %>%
+  arrange(desc(as.numeric(top_300_count))) %>%
+  head(2)
+
+
+top_300_avg_team_6 = rbind(strikers, miderfielders, defenders, goalkeepers)
+
+top_300_data = top_300_avg_team_6 %>%
+  group_by(`Game Week`) %>%
+  summarise(total_week_team_cost = sum(now_cost),
+            total_week_event_points = sum(event_points),
+            total_week_event_points = sum(event_points),
+            total_week_attack_points = sum(week_attack_points),
+            total_week_defend_points = sum(week_defend_points),
+            total_week_negative_points = sum(week_negative_points)) %>%
+  pivot_longer(cols = -`Game Week`, names_to = "measure", values_to = "values") %>%
+  mutate(team_stat = "Top 300")
+
+# tow data
+tow_data = player_performance_data %>%
+  filter(`Game Week` == "Gameweek 6" & `tow?` == TRUE)%>%
+  group_by(`Game Week`) %>%
+  summarise(total_team_cost = sum(now_cost),
+            total_event_points = sum(event_points),
+            total_attack_points = sum(week_attack_points),
+            total_defend_points = sum(week_defend_points),
+            total_negative_points = sum(week_negative_points)) %>%
+  pivot_longer(cols = -`Game Week`, names_to = "measure", values_to = "values") %>%
+  mutate(team_stat = "TOW")
+
+week_6_stats = rbind(top_300_data, tow_data)
+  
+  
+```
+
+
+```{r}
+player_performance_data %>%
+  filter(`Game Week` == "Gameweek 6" & element_type == "Defender") %>%
+  arrange(desc(attack_percent))
+```
+
+
+```{r}
+
+```

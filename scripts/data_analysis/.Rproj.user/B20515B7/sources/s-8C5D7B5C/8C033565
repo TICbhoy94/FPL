@@ -1,0 +1,27 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1604003273094.000,
+    "dirty" : true,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1644305149",
+    "id" : "8C033565",
+    "lastKnownWriteTime" : 1604327265,
+    "last_content_update" : 1604330258835,
+    "path" : "~/Personal/Coding_Jobs/FPL/scripts/data_analysis/team_and_player_stats.Rmd",
+    "project_path" : "team_and_player_stats.Rmd",
+    "properties" : {
+        "chunk_output_type" : "inline",
+        "cursorPosition" : "118,1",
+        "scrollLine" : "101",
+        "tempName" : "Untitled1"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

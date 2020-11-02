@@ -1,0 +1,33 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1604327376787.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "9D7D9AB4",
+    "lastKnownWriteTime" : 7087662412021986387,
+    "last_content_update" : 1604327376787,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "A9D3DC94",
+        "caption" : "top_300_avg_team_6",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=top_300_avg_team_6&cache_key=A9D3DC94",
+        "displayedObservations" : 15,
+        "environment" : "",
+        "expression" : "top_300_avg_team_6",
+        "object" : "top_300_avg_team_6",
+        "preview" : 0,
+        "totalObservations" : 15,
+        "variables" : 39
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

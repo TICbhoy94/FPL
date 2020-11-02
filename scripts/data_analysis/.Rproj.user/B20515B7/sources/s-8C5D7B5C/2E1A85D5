@@ -1,0 +1,33 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1604326988298.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "2E1A85D5",
+    "lastKnownWriteTime" : 1604326985,
+    "last_content_update" : 1604326988298,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "6F45F5E1",
+        "caption" : "player_performance_data",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=player_performance_data&cache_key=6F45F5E1",
+        "displayedObservations" : 2011,
+        "environment" : "",
+        "expression" : "player_performance_data",
+        "object" : "player_performance_data",
+        "preview" : 0,
+        "totalObservations" : 2011,
+        "variables" : 38
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

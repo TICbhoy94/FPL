@@ -1,0 +1,16 @@
+"0","player_performance_data = player_performance_data %>%
+  
+  # calculate the percentage the player is responsible for the 3 sets of points for their team
+  group_by(team, `Game Week`) %>%
+  
+  mutate(team_attack_points = sum(attacking_points_total),
+         team_defend_points = sum(defending_points_total),
+         team_negative_points = sum(negative_total_points)) %>%
+  group_by(second_name, element_type, add = TRUE) %>%
+  
+  mutate(attack_percent = attacking_points_total/team_attack_points*100,
+         defend_percent = defending_points_total/team_defend_points*100,
+         negative_percent = negative_total_points/team_negative_points*100)
+"
+"2","Error: object 'negative_total_points' not found
+"

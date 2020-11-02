@@ -1,0 +1,33 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1604324419567.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "ECAF6E00",
+    "lastKnownWriteTime" : 2314885530450146612,
+    "last_content_update" : 1604324419567,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "DC41F2DD",
+        "caption" : "week_6_stats",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=week_6_stats&cache_key=DC41F2DD",
+        "displayedObservations" : "10",
+        "environment" : "",
+        "expression" : "week_6_stats",
+        "object" : "week_6_stats",
+        "preview" : "0",
+        "totalObservations" : "10",
+        "variables" : "4"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 8,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

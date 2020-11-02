@@ -1,0 +1,22 @@
+"0","  # add one a calculation for the 3 sets of points for that week
+ player_performance_data = player_performance_data %>%
+   ungroup() %>%
+   group_by(second_name, element_type, team) %>%
+   arrange(second_name, `Game Week`) %>%
+   mutate(
+     
+        week_attack_points = attacking_points_total - lag(attacking_points_total, default = first(attacking_points_total)),
+        week_defend_points = defending_points_total - lag(defending_points_total, default = first(defending_points_total)),
+         week_negative_points = negative_points_total - lag(negative_points_total, default = first(negative_points_total))
+        
+        
+        
+        
+        
+        
+        
+        
+        )
+"
+"2","Error: object 'negative_points_total' not found
+"
